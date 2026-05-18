@@ -1,0 +1,1126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="SPARC project page: Leveraging Graph Geometry for Cold-Start Node Prediction."
+    />
+    <title>
+      SPARC | Leveraging Graph Geometry for Cold-Start Node Prediction
+    </title>
+
+    <style>
+      :root {
+        --bg: #ffffff;
+        --bg-soft: #f8fafc;
+        --text: #0f172a;
+        --muted: #475569;
+        --muted-light: #64748b;
+        --border: #e2e8f0;
+        --border-dark: #cbd5e1;
+        --primary: #0f172a;
+        --primary-soft: #1e293b;
+        --card: #ffffff;
+        --shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+        --radius-lg: 28px;
+        --radius-md: 18px;
+        --max-width: 1040px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.6;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      img,
+      video {
+        max-width: 100%;
+        display: block;
+      }
+
+      .container {
+        width: min(var(--max-width), calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        border-bottom: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(14px);
+      }
+
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 58px;
+      }
+
+      .brand {
+        font-size: 0.92rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .nav-links a:hover {
+        color: var(--text);
+      }
+
+      .mobile-toggle {
+        display: none;
+        border: 1px solid var(--border-dark);
+        background: var(--card);
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .mobile-menu {
+        display: none;
+        border-top: 1px solid var(--border);
+        background: var(--card);
+      }
+
+      .mobile-menu.open {
+        display: block;
+      }
+
+      .mobile-menu a {
+        display: block;
+        padding: 12px 20px;
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      .hero {
+        padding: 76px 0 40px;
+        text-align: center;
+      }
+
+      .eyebrow {
+        margin: 0 0 14px;
+        color: var(--muted-light);
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 900px;
+        margin: 0 auto;
+        font-size: clamp(2.4rem, 6vw, 4.3rem);
+        line-height: 1.05;
+        letter-spacing: -0.055em;
+      }
+
+      .hero-subtitle {
+        max-width: 760px;
+        margin: 24px auto 0;
+        color: var(--muted);
+        font-size: 1.18rem;
+        line-height: 1.8;
+      }
+
+      .authors {
+        margin-top: 26px;
+        color: var(--muted);
+        font-size: 1rem;
+      }
+
+      .authors strong {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--text);
+      }
+
+      .button-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 30px;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        padding: 10px 20px;
+        border: 1px solid var(--border-dark);
+        border-radius: 999px;
+        background: var(--card);
+        color: var(--text);
+        font-size: 0.92rem;
+        font-weight: 800;
+        transition:
+          transform 160ms ease,
+          box-shadow 160ms ease,
+          background 160ms ease;
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow);
+      }
+
+      .button.primary {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: #ffffff;
+      }
+
+      section {
+        padding: 66px 0;
+      }
+
+      .section-title {
+        text-align: center;
+      }
+
+      .section-title h2 {
+        max-width: 760px;
+        margin: 0 auto;
+        font-size: clamp(2rem, 4vw, 2.8rem);
+        line-height: 1.12;
+        letter-spacing: -0.035em;
+      }
+
+      .section-title p {
+        max-width: 740px;
+        margin: 18px auto 0;
+        color: var(--muted);
+        font-size: 1.02rem;
+      }
+
+      .abstract-text {
+        max-width: 760px;
+        margin: 34px auto 0;
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.8;
+      }
+
+      .video-card,
+      .explanation-card,
+      .resource-card,
+      .figure-card {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        background: var(--card);
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      }
+
+      .video-card {
+        max-width: 1000px;
+        margin: 34px auto 0;
+        padding: 12px;
+        background: var(--bg-soft);
+      }
+
+      .video-card video {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border-radius: 20px;
+        background: #000000;
+        object-fit: cover;
+      }
+
+      .asset-note {
+        margin: 14px 8px 4px;
+        color: var(--muted-light);
+        text-align: center;
+        font-size: 0.88rem;
+      }
+
+      code {
+        border-radius: 6px;
+        background: #e2e8f0;
+        padding: 2px 6px;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.88em;
+      }
+
+      .section-index {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin: 34px auto 34px;
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        background: var(--bg-soft);
+      }
+
+      .section-index a {
+        border-radius: 14px;
+        padding: 10px 12px;
+        color: var(--muted);
+        font-size: 0.92rem;
+        font-weight: 700;
+        transition:
+          background 160ms ease,
+          color 160ms ease,
+          box-shadow 160ms ease;
+      }
+
+      .section-index a:hover {
+        background: var(--card);
+        color: var(--text);
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+      }
+
+      .explanation-list {
+        display: grid;
+        gap: 22px;
+      }
+
+      .explanation-card {
+        scroll-margin-top: 84px;
+        padding: 30px;
+      }
+
+      .card-layout {
+        display: grid;
+        grid-template-columns: 54px 1fr;
+        gap: 22px;
+      }
+
+      .number-badge {
+        display: flex;
+        width: 48px;
+        height: 48px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        background: var(--primary);
+        color: #ffffff;
+        font-weight: 900;
+      }
+
+      .explanation-card h3 {
+        margin: 0;
+        font-size: 1.55rem;
+        line-height: 1.2;
+        letter-spacing: -0.025em;
+      }
+
+      .summary {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 1.08rem;
+        font-weight: 650;
+      }
+
+      .paragraphs {
+        margin-top: 20px;
+        color: var(--muted);
+      }
+
+      .paragraphs p {
+        margin: 0 0 14px;
+      }
+
+      .figure-card {
+        overflow: hidden;
+        margin: 24px 0;
+        background: var(--bg-soft);
+      }
+
+      .figure-card img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+      }
+
+      .figure-card figcaption {
+        border-top: 1px solid var(--border);
+        padding: 12px 16px;
+        color: var(--muted-light);
+        font-size: 0.92rem;
+      }
+
+      .equation-box {
+        overflow-x: auto;
+        margin: 24px 0;
+        padding: 22px 18px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        background: var(--bg-soft);
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      }
+
+      .equation {
+        display: inline-flex;
+        min-width: max-content;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        color: var(--text);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(1.1rem, 2.6vw, 1.65rem);
+        line-height: 1.35;
+      }
+
+      .equation.wrap {
+        flex-wrap: wrap;
+        min-width: 0;
+      }
+
+      .fraction {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 1.6rem;
+        line-height: 1.05;
+      }
+
+      .fraction-line {
+        width: 1.8rem;
+        height: 1px;
+        margin: 3px 0;
+        background: var(--text);
+      }
+
+      .results-text {
+        max-width: 780px;
+        margin: 34px auto 30px;
+        color: var(--muted);
+        text-align: center;
+        font-size: 1rem;
+      }
+
+      .results-grid {
+        display: grid;
+        gap: 28px;
+      }
+
+      .resources-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-top: 34px;
+      }
+
+      .resource-card {
+        padding: 26px;
+        text-align: center;
+        transition:
+          transform 160ms ease,
+          box-shadow 160ms ease;
+      }
+
+      .resource-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      .resource-card h3 {
+        margin: 0;
+        font-size: 1.1rem;
+      }
+
+      .resource-card p {
+        margin: 8px 0 0;
+        color: var(--muted-light);
+        font-size: 0.92rem;
+      }
+
+      .bibtex {
+        overflow-x: auto;
+        max-width: 920px;
+        margin: 34px auto 0;
+        padding: 24px;
+        border-radius: 20px;
+        background: #020617;
+        color: #f8fafc;
+        font-size: 0.92rem;
+        line-height: 1.65;
+      }
+
+      footer {
+        border-top: 1px solid var(--border);
+        background: var(--bg-soft);
+        padding: 30px 20px;
+        color: var(--muted-light);
+        text-align: center;
+        font-size: 0.92rem;
+      }
+
+      @media (max-width: 860px) {
+        .nav-links {
+          display: none;
+        }
+
+        .mobile-toggle {
+          display: inline-flex;
+        }
+
+        .section-index,
+        .resources-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .container {
+          width: min(100% - 28px, var(--max-width));
+        }
+
+        .hero {
+          padding-top: 54px;
+        }
+
+        section {
+          padding: 48px 0;
+        }
+
+        .card-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .explanation-card {
+          padding: 22px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="nav">
+      <div class="container nav-inner">
+        <a class="brand" href="#top">SPARC</a>
+        <div class="nav-links" aria-label="Primary navigation">
+          <a href="#abstract">Abstract</a>
+          <a href="#video">Video</a>
+          <a href="#explanation">Explanation</a>
+          <a href="#results">Results</a>
+          <a href="#resources">Resources</a>
+          <a href="#bibtex">BibTeX</a>
+        </div>
+        <button
+          class="mobile-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+        >
+          Menu
+        </button>
+      </div>
+      <div id="mobile-menu" class="mobile-menu">
+        <a href="#abstract">Abstract</a>
+        <a href="#video">Video</a>
+        <a href="#explanation">Explanation</a>
+        <a href="#results">Results</a>
+        <a href="#resources">Resources</a>
+        <a href="#bibtex">BibTeX</a>
+      </div>
+    </nav>
+
+    <header id="top" class="hero container">
+      <p class="eyebrow">Project page</p>
+      <h1>Leveraging Graph Geometry for Cold-Start Node Prediction</h1>
+      <p class="hero-subtitle">
+        A modular retrieval framework for giving newly arriving graph nodes
+        useful structural context before their edges are observed.
+      </p>
+      <div class="authors">
+        <strong>Anonymous Author(s)</strong>
+        <span>Submitted to NeurIPS 2026</span>
+      </div>
+      <div class="button-row">
+        <a class="button primary" href="paper/SPARC.pdf">Paper</a>
+        <a class="button" href="https://github.com/reutdayan/SPARC/tree/main"
+          >Code</a
+        >
+        <a class="button" href="#video">Video</a>
+        <a class="button" href="#bibtex">BibTeX</a>
+      </div>
+    </header>
+
+    <section id="abstract">
+      <div class="container">
+        <div class="section-title">
+          <p class="eyebrow">Abstract</p>
+          <h2>A geometry-aware view of cold-start node prediction</h2>
+        </div>
+        <div class="abstract-text">
+          <p>
+            Cold-start nodes pose a fundamental challenge for node prediction in
+            graphs: at inference time, newly arriving nodes have no observed
+            edges. This breaks a core assumption of many graph neural networks,
+            which rely on observed adjacency to aggregate neighborhood
+            information.
+          </p>
+          <p>
+            SPARC addresses this problem by learning a parametric map from node
+            features to approximate spectral coordinates of the observed
+            training graph. At inference time, a cold-start node is embedded
+            from its features alone, and its pseudo-neighborhood is retrieved in
+            the learned spectral space.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="video">
+      <div class="container">
+        <div class="section-title">
+          <p class="eyebrow">Video</p>
+          <h2>Full paper explanation</h2>
+        </div>
+        <div class="video-card">
+          <video controls playsinline preload="metadata">
+            <source src="videos/SPARCFullVideo.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <p class="asset-note">
+            Place the combined video at <code>videos/SPARCFullVideo.mp4</code>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="explanation">
+      <div class="container">
+        <div class="section-title">
+          <p class="eyebrow">Paper explanation</p>
+          <h2>Step-by-step explanation of SPARC</h2>
+          <p>
+            The full video gives the visual story. The sections below explain
+            the paper in order, from the strict cold-start problem to the
+            plug-in retrieval module.
+          </p>
+        </div>
+
+        <div class="section-index">
+          <a href="#cold-start">01. Strict cold-start setting</a>
+          <a href="#pseudo-neighborhood">02. Pseudo-neighborhood retrieval</a>
+          <a href="#feature-fails">03. Why feature retrieval fails</a>
+          <a href="#spectral-geometry">04. Spectral graph geometry</a>
+          <a href="#sparc-idea">05. The SPARC idea</a>
+          <a href="#training-objective">06. Training objective</a>
+          <a href="#inference">07. Cold-start inference</a>
+          <a href="#plugin">08. Plug-in retrieval module</a>
+        </div>
+
+        <div class="explanation-list">
+          <article id="cold-start" class="explanation-card">
+            <div class="card-layout">
+              <div class="number-badge">01</div>
+              <div>
+                <h3>Strict cold-start setting</h3>
+                <p class="summary">
+                  A new node must be classified before its graph connections are
+                  available.
+                </p>
+                <figure class="figure-card">
+                  <img
+                    src="images/cold-start-setting.png"
+                    alt="Strict cold-start setting figure"
+                  />
+                  <figcaption>
+                    Strict cold-start node prediction: the new node has
+                    features, but its incident edges are hidden at inference
+                    time.
+                  </figcaption>
+                </figure>
+                <div class="paragraphs">
+                  <p>
+                    Many graph learning models assume that the target node has
+                    an observed neighborhood at inference time. This assumption
+                    breaks in strict cold-start prediction, where a newly
+                    arriving node is unseen during training and has no incident
+                    edges when the prediction must be made.
+                  </p>
+                  <p>
+                    In this setting, the node feature vector is available, but
+                    the graph structure around the node is hidden. Therefore,
+                    the model cannot directly use standard message passing or
+                    neighborhood aggregation for the cold-start node.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article id="pseudo-neighborhood" class="explanation-card">
+            <div class="card-layout">
+              <div class="number-badge">02</div>
+              <div>
+                <h3>Pseudo-neighborhood retrieval</h3>
+                <p class="summary">
+                  Instead of using unavailable edges, retrieve a proxy
+                  neighborhood from training nodes.
+                </p>
+                <div class="paragraphs">
+                  <p>
+                    SPARC views strict cold-start prediction as a neighborhood
+                    recovery problem. Instead of using unavailable true
+                    neighbors, the method retrieves a set of top-k training
+                    nodes and treats them as a pseudo-neighborhood for the
+                    cold-start node.
+                  </p>
+                  <p>
+                    We can approximate the neighbors using the equation below.
+                    The function ϕ defines the representation space, and
+                    retrieval is performed by finding the nearest training nodes
+                    to the cold-start node in that space.
+                  </p>
+                </div>
+                <div
+                  class="equation-box"
+                  aria-label="Pseudo-neighborhood retrieval equation"
+                >
+                  <div class="equation">
+                    <span>N̂<sup>ϕ</sup><sub>k</sub>(v<sub>cold</sub>)</span>
+                    <span>=</span>
+                    <span>kNN</span>
+                    <span>(</span>
+                    <span>ϕ(v<sub>cold</sub>)</span>
+                    <span>;</span>
+                    <span
+                      >{ϕ(u)}<sub>u ∈ V<sub>tr</sub></sub></span
+                    >
+                    <span>)</span>
+                  </div>
+                </div>
+                <div class="paragraphs">
+                  <p>
+                    This makes the retrieval space a central design choice. Once
+                    a pseudo-neighborhood is retrieved, an existing downstream
+                    graph model can use it as contextual information for
+                    prediction.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article id="feature-fails" class="explanation-card">
+            <div class="card-layout">
+              <div class="number-badge">03</div>
+              <div>
+                <h3>Why feature retrieval fails</h3>
+                <p class="summary">
+                  Nodes can be structurally related even when their raw
+                  attributes are different.
+                </p>
+                <figure class="figure-card">
+                  <img
+                    src="images/neighborhood-prediction-figure.png"
+                    alt="Neighborhood prediction figure"
+                  />
+                  <figcaption>
+                    Neighborhood recovery on Reddit: spectral retrieval and
+                    SPARC recover substantially more graph context than raw
+                    feature retrieval.
+                  </figcaption>
+                </figure>
+                <div class="paragraphs">
+                  <p>
+                    A simple baseline is to retrieve pseudo-neighbors directly
+                    in the raw feature space. This is attractive because it is
+                    fully inductive: every cold-start node has a feature vector,
+                    so retrieval can always be performed.
+                  </p>
+                  <p>
+                    However, feature similarity can be a weak proxy for graph
+                    connectivity. Two nodes may be close in the graph because of
+                    relational behavior, interactions, citations, or shared
+                    users, even if their raw attributes are different.
+                  </p>
+                  <p>
+                    The Reddit example illustrates this limitation: posts are
+                    represented by text features, while graph edges depend on
+                    user-comment interactions. A user may comment on posts about
+                    different topics, so connected posts may not be close in
+                    feature space.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article id="spectral-geometry" class="explanation-card">
+            <div class="card-layout">
+              <div class="number-badge">04</div>
+              <div>
+                <h3>Spectral graph geometry</h3>
+                <p class="summary">
+                  Graph Laplacian eigenvectors provide coordinates shaped by
+                  connectivity.
+                </p>
+                <div class="paragraphs">
+                  <p>
+                    Spectral embeddings are derived from eigenvectors of the
+                    graph Laplacian. Unlike raw feature vectors, these
+                    embeddings are shaped by graph structure and capture smooth
+                    geometric patterns over the graph.
+                  </p>
+                  <p>
+                    In spectral coordinates, Euclidean distance can better
+                    reflect diffusion-like proximity: nodes that are
+                    structurally related tend to be closer in this
+                    representation. This makes spectral space an attractive
+                    target for pseudo-neighborhood retrieval.
+                  </p>
+                  <p>
+                    The challenge is that exact spectral coordinates are not
+                    available for strict cold-start nodes, because their edges
+                    are unknown and they are not part of the observed training
+                    graph Laplacian.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article id="sparc-idea" class="explanation-card">
+            <div class="card-layout">
+              <div class="number-badge">05</div>
+              <div>
+                <h3>The SPARC idea</h3>
+                <p class="summary">
+                  Learn an inductive bridge from node attributes to graph-aware
+                  geometry.
+                </p>
+                <figure class="figure-card">
+                  <img
+                    src="images/sparc-framework.png"
+                    alt="SPARC framework figure"
+                  />
+                  <figcaption>
+                    SPARC framework: the encoder learns a feature-to-spectral
+                    map, then uses the learned geometry to retrieve
+                    pseudo-neighbors for cold-start nodes.
+                  </figcaption>
+                </figure>
+                <div class="paragraphs">
+                  <p>
+                    SPARC bridges the gap between feature-only inference and
+                    spectral graph geometry. It learns a parametric encoder Fθ
+                    that maps node features into spectral-like coordinates.
+                  </p>
+                  <p>
+                    During training, SPARC uses the observed graph to learn a
+                    representation that approximates the graph's spectral
+                    geometry. During inference, the learned encoder can embed a
+                    cold-start node using only its features.
+                  </p>
+                  <p>
+                    This allows the model to place a new node into a graph-aware
+                    retrieval space without observing its test-time edges and
+                    without recomputing graph eigenvectors.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article id="training-objective" class="explanation-card">
+            <div class="card-layout">
+              <div class="number-badge">06</div>
+              <div>
+                <h3>Training objective</h3>
+                <p class="summary">
+                  The encoder is optimized to preserve graph geometry and
+                  optionally align with labels.
+                </p>
+                <div class="paragraphs">
+                  <p>
+                    The SPARC encoder is trained on the observed training graph.
+                    The spectral objective encourages embeddings to be smooth
+                    with respect to the graph: structurally related nodes should
+                    have compatible representations.
+                  </p>
+                </div>
+                <div
+                  class="equation-box"
+                  aria-label="SPARC training objective equation"
+                >
+                  <div class="equation wrap">
+                    <span>L<sub>SPARC</sub></span>
+                    <span>=</span>
+                    <span>L<sub>spec</sub></span>
+                    <span>+</span>
+                    <span>λ<sub>Q</sub>L<sub>con</sub></span>
+                    <span>=</span>
+                    <span class="fraction"
+                      ><span>1</span><span class="fraction-line"></span
+                      ><span>m</span></span
+                    >
+                    <span>Tr(</span>
+                    <span>Z<sub>B</sub><sup>⊤</sup></span>
+                    <span>(L<sub>B</sub> − λ<sub>Q</sub>Q<sub>B</sub>)</span>
+                    <span>Z<sub>B</sub></span>
+                    <span>)</span>
+                  </div>
+                </div>
+                <div class="paragraphs">
+                  <p>
+                    An orthogonality constraint prevents the embeddings from
+                    collapsing to a trivial solution. When labels are available,
+                    SPARC can also add a task-aware constraint that pulls
+                    same-label nodes closer and pushes different-label nodes
+                    farther apart.
+                  </p>
+                  <p>
+                    Importantly, graph structure and labels are only used during
+                    training. At inference time, the cold-start node is embedded
+                    from features alone, with no access to its edges or label.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article id="inference" class="explanation-card">
+            <div class="card-layout">
+              <div class="number-badge">07</div>
+              <div>
+                <h3>Cold-start inference</h3>
+                <p class="summary">
+                  At test time, SPARC uses features only, then supplies
+                  retrieved context to the predictor.
+                </p>
+                <div class="paragraphs">
+                  <p>
+                    At inference time, a cold-start node arrives with only its
+                    feature vector. SPARC first applies the trained encoder to
+                    obtain the node's spectral-like representation.
+                  </p>
+                  <p>
+                    Then, it retrieves the nearest observed training nodes in
+                    the learned SPARC space. These retrieved nodes form the
+                    pseudo-neighborhood that supplies structural context to the
+                    downstream model.
+                  </p>
+                  <p>
+                    The downstream predictor receives the cold-start node and
+                    its retrieved context, allowing the model to behave more
+                    like a graph model even though the target node has no
+                    observed edges.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article id="plugin" class="explanation-card">
+            <div class="card-layout">
+              <div class="number-badge">08</div>
+              <div>
+                <h3>Plug-in retrieval module</h3>
+                <p class="summary">
+                  SPARC can be attached to existing graph backbones without
+                  redesigning them.
+                </p>
+                <div class="paragraphs">
+                  <p>
+                    SPARC is designed as a retrieval module rather than a new
+                    graph classifier. It replaces the unavailable cold-start
+                    neighborhood with a learned pseudo-neighborhood.
+                  </p>
+                  <p>
+                    Because of this separation, the same retrieval idea can be
+                    used with different graph backbones. The paper evaluates
+                    SPARC with GraphSAGE, Spectral-GCN, and NAGphormer.
+                  </p>
+                  <p>
+                    This makes the method modular: existing graph architectures
+                    can be adapted to strict cold-start settings by changing how
+                    their neighborhood context is constructed.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="results">
+      <div class="container">
+        <div class="section-title">
+          <p class="eyebrow">Results</p>
+          <h2>SPARC improves retrieval and cold-start prediction</h2>
+        </div>
+        <div class="results-text">
+          <p>
+            The results evaluate whether SPARC recovers better
+            pseudo-neighborhoods and whether this improved retrieval translates
+            into stronger strict cold-start classification.
+          </p>
+          <p>
+            Across the reported datasets, SPARC improves over raw feature
+            retrieval and Cold-Brew in the main classification benchmark, while
+            the neighborhood recovery table shows that learned spectral
+            retrieval provides a substantially stronger proxy for graph context.
+          </p>
+        </div>
+        <div class="results-grid">
+          <figure class="figure-card">
+            <img
+              src="images/results-table-1.png"
+              alt="Neighborhood recovery accuracy table"
+            />
+            <figcaption>
+              Neighborhood recovery accuracy across retrieval spaces. Oracle
+              Spectral is a non-deployable graph-access reference.
+            </figcaption>
+          </figure>
+          <figure class="figure-card">
+            <img
+              src="images/results-table-2.png"
+              alt="Strict cold-start node classification accuracy table"
+            />
+            <figcaption>
+              Strict cold-start node classification accuracy. All methods use
+              the same downstream aggregator.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="resources">
+      <div class="container">
+        <div class="section-title">
+          <p class="eyebrow">Resources</p>
+          <h2>Paper, code, and citation</h2>
+        </div>
+        <div class="resources-grid">
+          <a class="resource-card" href="paper/SPARC.pdf">
+            <h3>Paper</h3>
+            <p>Download the PDF</p>
+          </a>
+          <a
+            class="resource-card"
+            href="https://github.com/reutdayan/SPARC/tree/main"
+          >
+            <h3>Code</h3>
+            <p>Open the SPARC GitHub repository</p>
+          </a>
+          <a class="resource-card" href="#bibtex">
+            <h3>Citation</h3>
+            <p>Copy the BibTeX entry</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="bibtex">
+      <div class="container">
+        <div class="section-title">
+          <h2>BibTeX</h2>
+        </div>
+        <pre class="bibtex">
+@inproceedings{sparc2026,
+  title     = {Leveraging Graph Geometry for Cold-Start Node Prediction},
+  author    = {Anonymous Authors},
+  booktitle = {Submitted to NeurIPS},
+  year      = {2026}
+}</pre
+        >
+      </div>
+    </section>
+
+    <footer>
+      <p>SPARC project page. Built as a static HTML/CSS/JS website.</p>
+    </footer>
+
+    <script>
+      const toggle = document.querySelector(".mobile-toggle");
+      const menu = document.querySelector("#mobile-menu");
+
+      if (toggle && menu) {
+        toggle.addEventListener("click", () => {
+          const isOpen = menu.classList.toggle("open");
+          toggle.setAttribute("aria-expanded", String(isOpen));
+        });
+
+        menu.querySelectorAll("a").forEach((link) => {
+          link.addEventListener("click", () => {
+            menu.classList.remove("open");
+            toggle.setAttribute("aria-expanded", "false");
+          });
+        });
+      }
+
+      function runPageChecks() {
+        const requiredAssets = [
+          "videos/SPARCFullVideo.mp4",
+          "images/cold-start-setting.png",
+          "images/neighborhood-prediction-figure.png",
+          "images/sparc-framework.png",
+          "images/results-table-1.png",
+          "images/results-table-2.png",
+          "paper/SPARC.pdf",
+        ];
+
+        const explanationCards = document.querySelectorAll(".explanation-card");
+        const resultFigures = document.querySelectorAll("#results figure");
+
+        if (explanationCards.length !== 8) {
+          console.warn(
+            "Expected 8 explanation cards, found",
+            explanationCards.length,
+          );
+        }
+
+        if (resultFigures.length !== 2) {
+          console.warn(
+            "Expected 2 result figures, found",
+            resultFigures.length,
+          );
+        }
+
+        console.info("Expected static assets:", requiredAssets);
+      }
+
+      runPageChecks();
+    </script>
+  </body>
+</html>
