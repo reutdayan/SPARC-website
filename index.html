@@ -10,6 +10,8 @@
     <title>
       SPARC | Leveraging Graph Geometry for Cold-Start Node Prediction
     </title>
+    <link rel="icon" href="images/icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="images/icon.png" />
 
     <style>
       :root {
@@ -85,9 +87,19 @@
       }
 
       .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
         font-size: 0.92rem;
         font-weight: 800;
         letter-spacing: 0.04em;
+      }
+
+      .brand-icon {
+        width: 28px;
+        height: 28px;
+        flex-shrink: 0;
+        object-fit: contain;
       }
 
       .nav-links {
@@ -436,6 +448,93 @@
         gap: 28px;
       }
 
+      .results-table-card {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 22px 24px 24px;
+        background: var(--card);
+        box-shadow: var(--shadow);
+      }
+
+      .results-table-title {
+        margin: 0 0 6px;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+
+      .results-table-note {
+        margin: 0 0 18px;
+        font-size: 0.88rem;
+        color: var(--muted-light);
+        line-height: 1.5;
+      }
+
+      .results-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .results-table {
+        width: 100%;
+        min-width: 640px;
+        border-collapse: collapse;
+        font-size: 0.86rem;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .results-table th,
+      .results-table td {
+        padding: 10px 10px;
+        text-align: center;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+      }
+
+      .results-table th:first-child,
+      .results-table td:first-child {
+        text-align: left;
+        font-weight: 600;
+        white-space: normal;
+        min-width: 7.5rem;
+      }
+
+      .results-table thead th {
+        font-size: 0.8rem;
+        color: var(--muted);
+        font-weight: 700;
+        background: var(--bg-soft);
+      }
+
+      .results-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .results-table .row-sparc td {
+        font-weight: 700;
+        color: var(--text);
+      }
+
+      .results-table .row-oracle td {
+        border-top: 2px solid var(--border-dark);
+      }
+
+      .results-table .row-meta td {
+        font-size: 0.82rem;
+        color: var(--muted);
+        font-style: italic;
+      }
+
+      .results-table .row-meta td:first-child {
+        font-style: italic;
+        font-weight: 600;
+      }
+
+      .results-table .row-delta td {
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+
       .resources-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -530,7 +629,16 @@
   <body>
     <nav class="nav">
       <div class="container nav-inner">
-        <a class="brand" href="#top">SPARC</a>
+        <a class="brand" href="#top">
+          <img
+            class="brand-icon"
+            src="images/icon.png"
+            width="28"
+            height="28"
+            alt=""
+          />
+          SPARC
+        </a>
         <div class="nav-links" aria-label="Primary navigation">
           <a href="#abstract">Abstract</a>
           <a href="#video">Video</a>
@@ -562,12 +670,12 @@
       <p class="eyebrow">Project page</p>
       <h1>Leveraging Graph Geometry for Cold-Start Node Prediction</h1>
       <p class="hero-subtitle">
-        A modular retrieval framework for giving newly arriving graph nodes
-        useful structural context before their edges are observed.
+        SPARC learns a feature-to-spectral map from the observed training graph,
+        then retrieves pseudo-neighborhoods for cold-start nodes from features
+        alone—without test-time edges.
       </p>
       <div class="authors">
-        <strong>Anonymous Author(s)</strong>
-        <span>Submitted to NeurIPS 2026</span>
+        <strong>Reut Dayan and Uri Shaham</strong>
       </div>
       <div class="button-row">
         <a class="button primary" href="paper/SPARC.pdf">Paper</a>
@@ -615,9 +723,6 @@
             <source src="videos/SPARCFullVideo.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
-          <p class="asset-note">
-            Place the combined video at <code>videos/SPARCFullVideo.mp4</code>.
-          </p>
         </div>
       </div>
     </section>
@@ -627,11 +732,6 @@
         <div class="section-title">
           <p class="eyebrow">Paper explanation</p>
           <h2>Step-by-step explanation of SPARC</h2>
-          <p>
-            The full video gives the visual story. The sections below explain
-            the paper in order, from the strict cold-start problem to the
-            plug-in retrieval module.
-          </p>
         </div>
 
         <div class="section-index">
@@ -651,20 +751,11 @@
               <div class="number-badge">01</div>
               <div>
                 <h3>Strict cold-start setting</h3>
-                <p class="summary">
-                  A new node must be classified before its graph connections are
-                  available.
-                </p>
                 <figure class="figure-card">
                   <img
                     src="images/cold-start-setting.png"
                     alt="Strict cold-start setting figure"
                   />
-                  <figcaption>
-                    Strict cold-start node prediction: the new node has
-                    features, but its incident edges are hidden at inference
-                    time.
-                  </figcaption>
                 </figure>
                 <div class="paragraphs">
                   <p>
@@ -690,18 +781,7 @@
               <div class="number-badge">02</div>
               <div>
                 <h3>Pseudo-neighborhood retrieval</h3>
-                <p class="summary">
-                  Instead of using unavailable edges, retrieve a proxy
-                  neighborhood from training nodes.
-                </p>
                 <div class="paragraphs">
-                  <p>
-                    SPARC views strict cold-start prediction as a neighborhood
-                    recovery problem. Instead of using unavailable true
-                    neighbors, the method retrieves a set of top-k training
-                    nodes and treats them as a pseudo-neighborhood for the
-                    cold-start node.
-                  </p>
                   <p>
                     We can approximate the neighbors using the equation below.
                     The function ϕ defines the representation space, and
@@ -743,10 +823,6 @@
               <div class="number-badge">03</div>
               <div>
                 <h3>Why feature retrieval fails</h3>
-                <p class="summary">
-                  Nodes can be structurally related even when their raw
-                  attributes are different.
-                </p>
                 <figure class="figure-card">
                   <img
                     src="images/neighborhood-prediction-figure.png"
@@ -794,23 +870,16 @@
                 </p>
                 <div class="paragraphs">
                   <p>
-                    Spectral embeddings are derived from eigenvectors of the
-                    graph Laplacian. Unlike raw feature vectors, these
-                    embeddings are shaped by graph structure and capture smooth
-                    geometric patterns over the graph.
+                    Spectral embeddings come from Laplacian eigenvectors, so
+                    they reflect connectivity rather than raw attributes.
                   </p>
                   <p>
-                    In spectral coordinates, Euclidean distance can better
-                    reflect diffusion-like proximity: nodes that are
-                    structurally related tend to be closer in this
-                    representation. This makes spectral space an attractive
-                    target for pseudo-neighborhood retrieval.
+                    Structurally close nodes tend to be nearby in spectral
+                    space—ideal for pseudo-neighborhood retrieval.
                   </p>
                   <p>
-                    The challenge is that exact spectral coordinates are not
-                    available for strict cold-start nodes, because their edges
-                    are unknown and they are not part of the observed training
-                    graph Laplacian.
+                    Exact spectral coordinates are unavailable for cold-start
+                    nodes, whose test-time edges are hidden.
                   </p>
                 </div>
               </div>
@@ -831,11 +900,6 @@
                     src="images/sparc-framework.png"
                     alt="SPARC framework figure"
                   />
-                  <figcaption>
-                    SPARC framework: the encoder learns a feature-to-spectral
-                    map, then uses the learned geometry to retrieve
-                    pseudo-neighbors for cold-start nodes.
-                  </figcaption>
                 </figure>
                 <div class="paragraphs">
                   <p>
@@ -906,11 +970,6 @@
                     same-label nodes closer and pushes different-label nodes
                     farther apart.
                   </p>
-                  <p>
-                    Importantly, graph structure and labels are only used during
-                    training. At inference time, the cold-start node is embedded
-                    from features alone, with no access to its edges or label.
-                  </p>
                 </div>
               </div>
             </div>
@@ -921,10 +980,6 @@
               <div class="number-badge">07</div>
               <div>
                 <h3>Cold-start inference</h3>
-                <p class="summary">
-                  At test time, SPARC uses features only, then supplies
-                  retrieved context to the predictor.
-                </p>
                 <div class="paragraphs">
                   <p>
                     At inference time, a cold-start node arrives with only its
@@ -953,10 +1008,6 @@
               <div class="number-badge">08</div>
               <div>
                 <h3>Plug-in retrieval module</h3>
-                <p class="summary">
-                  SPARC can be attached to existing graph backbones without
-                  redesigning them.
-                </p>
                 <div class="paragraphs">
                   <p>
                     SPARC is designed as a retrieval module rather than a new
@@ -1001,26 +1052,163 @@
           </p>
         </div>
         <div class="results-grid">
-          <figure class="figure-card">
-            <img
-              src="images/results-table-1.png"
-              alt="Neighborhood recovery accuracy table"
-            />
-            <figcaption>
-              Neighborhood recovery accuracy across retrieval spaces. Oracle
-              Spectral is a non-deployable graph-access reference.
-            </figcaption>
-          </figure>
-          <figure class="figure-card">
-            <img
-              src="images/results-table-2.png"
-              alt="Strict cold-start node classification accuracy table"
-            />
-            <figcaption>
-              Strict cold-start node classification accuracy. All methods use
-              the same downstream aggregator.
-            </figcaption>
-          </figure>
+          <div class="results-table-card">
+            <p class="results-table-title">
+              Table 1: Neighborhood recovery accuracy across retrieval spaces
+            </p>
+            <p class="results-table-note">
+              Oracle Spectral is a non-deployable graph-access reference.
+            </p>
+            <div class="results-table-wrap">
+              <table class="results-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Retrieval space</th>
+                    <th scope="col">Cora</th>
+                    <th scope="col">Citeseer</th>
+                    <th scope="col">Pubmed</th>
+                    <th scope="col">Chameleon</th>
+                    <th scope="col">Squirrel</th>
+                    <th scope="col">Wiki-CS</th>
+                    <th scope="col">Reddit</th>
+                    <th scope="col">ogbn-products</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Features</th>
+                    <td>9.42%</td>
+                    <td>17.05%</td>
+                    <td>24.28%</td>
+                    <td>39.94%</td>
+                    <td>44.87%</td>
+                    <td>75.37%</td>
+                    <td>29.52%</td>
+                    <td>50.48%</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Cold-Brew</th>
+                    <td>13.69%</td>
+                    <td>19.30%</td>
+                    <td>7.78%</td>
+                    <td>49.82%</td>
+                    <td>44.42%</td>
+                    <td>58.95%</td>
+                    <td>35.95%</td>
+                    <td>47.66%</td>
+                  </tr>
+                  <tr class="row-sparc">
+                    <th scope="row">SPARC</th>
+                    <td>62.69%</td>
+                    <td>49.53%</td>
+                    <td>31.26%</td>
+                    <td>49.92%</td>
+                    <td>45.02%</td>
+                    <td>62.71%</td>
+                    <td>61.66%</td>
+                    <td>65.53%</td>
+                  </tr>
+                  <tr class="row-oracle">
+                    <th scope="row">Oracle Spectral</th>
+                    <td>78.94%</td>
+                    <td>80.09%</td>
+                    <td>88.11%</td>
+                    <td>97.63%</td>
+                    <td>90.52%</td>
+                    <td>81.25%</td>
+                    <td>70.58%</td>
+                    <td>94.80%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="results-table-card">
+            <p class="results-table-title">
+              Table 2: Strict cold-start node classification accuracy
+            </p>
+            <p class="results-table-note">
+              All methods use the same downstream aggregator. FCR is a
+              dataset-level diagnostic; higher FCR indicates stronger
+              feature-only signal. Δ<sub>SPARC − Features</sub> reports absolute
+              improvement in percentage points.
+            </p>
+            <div class="results-table-wrap">
+              <table class="results-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Method</th>
+                    <th scope="col">Cora</th>
+                    <th scope="col">Citeseer</th>
+                    <th scope="col">Pubmed</th>
+                    <th scope="col">Chameleon</th>
+                    <th scope="col">Squirrel</th>
+                    <th scope="col">Wiki-CS</th>
+                    <th scope="col">Reddit</th>
+                    <th scope="col">ogbn-products</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Features</th>
+                    <td>69.74 ± 1.29</td>
+                    <td>72.07 ± 0.99</td>
+                    <td>86.41 ± 0.87</td>
+                    <td>48.25 ± 0.42</td>
+                    <td>31.92 ± 0.23</td>
+                    <td>80.51 ± 1.39</td>
+                    <td>75.03 ± 0.22</td>
+                    <td>75.35 ± 0.46</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Cold-Brew</th>
+                    <td>72.69 ± 0.24</td>
+                    <td>71.77 ± 0.87</td>
+                    <td>85.80 ± 1.13</td>
+                    <td>39.04 ± 0.83</td>
+                    <td>31.73 ± 0.72</td>
+                    <td>78.72 ± 1.19</td>
+                    <td>73.70 ± 0.29</td>
+                    <td>79.27 ± 0.39</td>
+                  </tr>
+                  <tr class="row-sparc">
+                    <th scope="row">SPARC</th>
+                    <td>77.86 ± 0.92</td>
+                    <td>75.38 ± 0.25</td>
+                    <td>86.51 ± 0.89</td>
+                    <td>52.63 ± 0.43</td>
+                    <td>37.12 ± 0.76</td>
+                    <td>81.22 ± 0.36</td>
+                    <td>78.54 ± 0.89</td>
+                    <td>81.34 ± 0.19</td>
+                  </tr>
+                  <tr class="row-meta">
+                    <th scope="row">FCR</th>
+                    <td>5.73%</td>
+                    <td>24.00%</td>
+                    <td>83.42%</td>
+                    <td>55.87%</td>
+                    <td>53.92%</td>
+                    <td>32.88%</td>
+                    <td>8.50%</td>
+                    <td>16.27%</td>
+                  </tr>
+                  <tr class="row-delta">
+                    <th scope="row">Δ SPARC − Features (pp)</th>
+                    <td>+8.12</td>
+                    <td>+3.31</td>
+                    <td>+0.10</td>
+                    <td>+4.38</td>
+                    <td>+5.20</td>
+                    <td>+0.71</td>
+                    <td>+3.51</td>
+                    <td>+5.99</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1059,8 +1247,7 @@
         <pre class="bibtex">
 @inproceedings{sparc2026,
   title     = {Leveraging Graph Geometry for Cold-Start Node Prediction},
-  author    = {Anonymous Authors},
-  booktitle = {Submitted to NeurIPS},
+  author    = {Reut Dayan and Uri Shaham},
   year      = {2026}
 }</pre
         >
@@ -1095,13 +1282,13 @@
           "images/cold-start-setting.png",
           "images/neighborhood-prediction-figure.png",
           "images/sparc-framework.png",
-          "images/results-table-1.png",
-          "images/results-table-2.png",
           "paper/SPARC.pdf",
         ];
 
         const explanationCards = document.querySelectorAll(".explanation-card");
-        const resultFigures = document.querySelectorAll("#results figure");
+        const resultTables = document.querySelectorAll(
+          "#results .results-table-card",
+        );
 
         if (explanationCards.length !== 8) {
           console.warn(
@@ -1110,10 +1297,10 @@
           );
         }
 
-        if (resultFigures.length !== 2) {
+        if (resultTables.length !== 2) {
           console.warn(
-            "Expected 2 result figures, found",
-            resultFigures.length,
+            "Expected 2 result tables, found",
+            resultTables.length,
           );
         }
 
